@@ -1,5 +1,6 @@
 class Api::BoatsController < ApplicationController
   def index
+    @boats = Boat.all
   end
 
   def create
