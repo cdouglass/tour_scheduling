@@ -2,25 +2,25 @@
 
 one:
   start_time: 1506520000
-  duration: 5
+  end_time: 1506520300
   id: 1
 
 two:
   start_time: 1406052000
-  duration: 1
+  end_time: 1406052060
   id: 2
 
 midnight_of_two:
   start_time: 1406012400
-  duration: 1
+  end_time: 1406012460
   id: 3
 
 midnight_after_two:
   start_time: 1406098800
-  duration: 1
+  end_time: 1406098860
   id: 4
 
 just_before_two:
   start_time: 1406012399
-  duration: 1
+  end_time: 1406012400
   id: 5

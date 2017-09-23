@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170923025715) do
+ActiveRecord::Schema.define(version: 20170923201407) do
 
   create_table "boats", force: :cascade do |t|
     t.string "name", null: false
@@ -20,10 +20,12 @@ ActiveRecord::Schema.define(version: 20170923025715) do
   end
 
   create_table "timeslots", force: :cascade do |t|
-    t.integer "start_time"
-    t.integer "duration"
+    t.integer "start_time", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "end_time", default: -1, null: false
+    t.index ["end_time"], name: "index_timeslots_on_end_time"
+    t.index ["start_time"], name: "index_timeslots_on_start_time"
   end
 
 end

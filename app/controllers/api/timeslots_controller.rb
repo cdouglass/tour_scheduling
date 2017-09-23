@@ -14,7 +14,12 @@ class Api::TimeslotsController < ApplicationController
   end
 
   def create
-    @timeslot = Timeslot.new(params.require(:timeslot).permit(:start_time, :duration))
+    # in minutes
+    duration = create_params[:duration].to_i
+
+    # times in seconds from epoch
+    @timeslot = Timeslot.new(create_params[:timeslot])
+    @timeslot.end_time = @timeslot.start_time + 60 * duration
 
     @timeslot.save
 
@@ -29,5 +34,10 @@ class Api::TimeslotsController < ApplicationController
 
   def search_params
     params.permit(:date)
+  end
+
+  def create_params
+    { timeslot: params.require(:timeslot).permit(:start_time),
+      duration: params.require(:timeslot).permit(:duration)[:duration] }
   end
 end
