@@ -1,6 +1,14 @@
 class Api::TimeslotsController < ApplicationController
   def index
-    @timeslots = Timeslot.all
+    today = Date.current
+    date_string = search_params[:date]
+    begin
+      @date = date_string.nil? ? today : date_string.to_date
+    rescue ArgumentError
+      @date = today
+    end
+
+    @timeslots = Timeslot.all_on_date(@date)
 
     render json: @timeslots, only: timeslot_fields
   end
@@ -17,5 +25,9 @@ class Api::TimeslotsController < ApplicationController
 
   def timeslot_fields
     [:id, :start_time, :duration]
+  end
+
+  def search_params
+    params.permit(:date)
   end
 end
