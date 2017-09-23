@@ -24,3 +24,13 @@ just_before_two:
   start_time: 1406012399
   end_time: 1406012400
   id: 5
+
+extends_into_day_1:
+  start_time: 1505520000
+  end_time: 1506520300
+  id: 6
+
+before_and_after_day_1:
+  start_time: 1505520000
+  end_time: 1507520300
+  id: 7

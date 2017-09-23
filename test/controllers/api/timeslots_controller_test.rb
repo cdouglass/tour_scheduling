@@ -24,11 +24,22 @@ class Api::TimeslotsControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  def test_includes_timeslots_overlapping_date
+    days = [
+      ["2017-09-27", "[{\"id\":1,\"start_time\":1506520000,\"duration\":5},{\"id\":6,\"start_time\":1505520000,\"duration\":16671},{\"id\":7,\"start_time\":1505520000,\"duration\":33338}]"],
+    ]
+
+    days.each do |date, expected_response|
+      get api_timeslots_url, params: {date: date}
+      assert_equal(response.body, expected_response)
+    end
+  end
+
   def test_create
     assert_difference('Timeslot.count', 1) do
       post api_timeslots_url, params: {timeslot: {start_time: "1406052000", duration: "120"}}
       assert_response :success
-      expected_response = "{\"id\":6,\"start_time\":1406052000,\"duration\":120}"
+      expected_response = "{\"id\":8,\"start_time\":1406052000,\"duration\":120}"
       assert_equal(response.body, expected_response)
     end
   end
