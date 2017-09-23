@@ -1,6 +1,8 @@
 class Api::BoatsController < ApplicationController
   def index
     @boats = Boat.all
+
+    render json: @boats, only: boat_fields
   end
 
   def create
@@ -8,6 +10,12 @@ class Api::BoatsController < ApplicationController
 
     @boat.save
 
-    render @boat
+    render json: @boat, only: boat_fields
+  end
+
+  private
+
+  def boat_fields
+    [:id, :name, :capacity]
   end
 end
