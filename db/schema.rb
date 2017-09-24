@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170923201407) do
+ActiveRecord::Schema.define(version: 20170924064823) do
+
+  create_table "assignments", id: false, force: :cascade do |t|
+    t.integer "timeslot_id", null: false
+    t.integer "boat_id", null: false
+    t.index ["boat_id"], name: "index_assignments_on_boat_id"
+    t.index ["timeslot_id"], name: "index_assignments_on_timeslot_id"
+  end
 
   create_table "boats", force: :cascade do |t|
     t.string "name", null: false

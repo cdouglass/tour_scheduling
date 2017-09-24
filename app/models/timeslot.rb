@@ -1,5 +1,8 @@
 class Timeslot < ApplicationRecord
 
+  has_many :assignments
+  has_many :boats, through: :assignments
+
   attr_accessor :duration
 
   validates_numericality_of [:start_time, :duration], only_integer: true, greater_than: 0
