@@ -5,9 +5,9 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
-  boat_id: 1
+  boat_id: 3
   timeslot_id: 1
 
 two:
-  boat_id: 1
+  boat_id: 4
   timeslot_id: 1
