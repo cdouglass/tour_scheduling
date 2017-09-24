@@ -3,7 +3,7 @@ require 'test_helper'
 class TimeslotTest < ActiveSupport::TestCase
 
   def setup
-    @timeslot = Timeslot.new(start_time: 1_000_000, end_time: 2_000_000)
+    @timeslot = Timeslot.new(start_time: 1_000_000, duration: 20)
   end
 
   def test_valid_timeslot
@@ -17,18 +17,14 @@ class TimeslotTest < ActiveSupport::TestCase
     end
   end
 
-  def test_validates_end_time_is_integer
-    [10.5, "foo", nil].each do |val|
-      @timeslot.end_time = val
+  def test_validates_duration_is_positive_integer
+    [10.5, "foo", nil, -10].each do |val|
+      @timeslot.duration = val
       assert @timeslot.invalid?
     end
   end
 
-  def test_validates_end_after_start
-    @timeslot.end_time = @timeslot.start_time
-    assert @timeslot.invalid?
-
-    @timeslot.end_time = @timeslot.start_time - 1_000
-    assert @timeslot.invalid?
+  def test_duration
+    assert_equal(20, @timeslot.duration)
   end
 end

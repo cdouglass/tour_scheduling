@@ -37,7 +37,7 @@ class Api::TimeslotsControllerTest < ActionDispatch::IntegrationTest
 
   def test_create
     assert_difference('Timeslot.count', 1) do
-      post api_timeslots_url, params: {timeslot: {start_time: "1406052000", duration: "120"}}
+      post api_timeslots_url, params: {timeslot: {start_time: 1406052000, duration: 120}}
       assert_response :success
       expected_response = "{\"id\":8,\"start_time\":1406052000,\"duration\":120}"
       assert_equal(response.body, expected_response)

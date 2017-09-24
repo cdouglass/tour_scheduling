@@ -1,16 +1,23 @@
 class Timeslot < ApplicationRecord
 
-  validates_numericality_of [:start_time, :end_time], only_integer: true
+  attr_accessor :duration
 
-  validate :end_after_start
+  validates_numericality_of [:start_time, :duration], only_integer: true, greater_than: 0
+
+  after_validation :set_end_time
 
   def duration
-    (self.end_time - self.start_time) / 60
+    @duration ||= (self.end_time - self.start_time) / 60
+  end
+
+  def initialize(attributes={})
+    self.duration = attributes[:duration]
+    super
   end
 
   def as_json(options = {})
     json = super(options)
-    json[:duration] = self.duration
+    json[:duration] = self.duration.to_i
     json
   end
 
@@ -23,10 +30,9 @@ class Timeslot < ApplicationRecord
 
   private
 
-  def end_after_start
-    if self.errors.empty? && self.end_time <= self.start_time
-      errors.add(:end_time, "Duration must be a positive number")
+  def set_end_time
+    if (self.end_time.nil? || self.end_time < 0) && self.errors.empty?
+      self.end_time = self.start_time + 60 * @duration.to_i
     end
   end
-
 end
