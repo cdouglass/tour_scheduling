@@ -10,11 +10,25 @@ class TimeslotTest < ActiveSupport::TestCase
     assert @timeslot.valid?
   end
 
+  def test_validates_start_time_is_integer
+    [10.5, "foo", nil].each do |val|
+      @timeslot.start_time = val
+      assert @timeslot.invalid?
+    end
+  end
+
+  def test_validates_end_time_is_integer
+    [10.5, "foo", nil].each do |val|
+      @timeslot.end_time = val
+      assert @timeslot.invalid?
+    end
+  end
+
   def test_validates_end_after_start
     @timeslot.end_time = @timeslot.start_time
-    assert !@timeslot.valid?
+    assert @timeslot.invalid?
 
     @timeslot.end_time = @timeslot.start_time - 1_000
-    assert !@timeslot.valid?
+    assert @timeslot.invalid?
   end
 end

@@ -1,5 +1,7 @@
 class Timeslot < ApplicationRecord
 
+  validates_numericality_of [:start_time, :end_time], only_integer: true
+
   validate :end_after_start
 
   def duration
@@ -22,7 +24,7 @@ class Timeslot < ApplicationRecord
   private
 
   def end_after_start
-    if self.end_time <= self.start_time
+    if self.errors.empty? && self.end_time <= self.start_time
       errors.add(:end_time, "Duration must be a positive number")
     end
   end
