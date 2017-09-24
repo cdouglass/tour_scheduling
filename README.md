@@ -22,3 +22,7 @@ Things you may want to cover:
 * Deployment instructions
 
 * ...
+
+## Design decisions
+
+* Storing `start_time` as an integer, rather than datetime. As well as matching desired input format, storing an integer requires only half as much space as storing a datetime.
