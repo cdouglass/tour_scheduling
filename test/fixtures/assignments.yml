@@ -11,3 +11,7 @@ one:
 two:
   boat_id: 4
   timeslot_id: 1
+
+three:
+  boat: pelagian
+  timeslot: just_before_two

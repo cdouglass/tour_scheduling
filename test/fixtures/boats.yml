@@ -19,3 +19,8 @@ four:
   id: 4
   name: "Funny, It Worked Last Time..."
   capacity: 1_000_000
+
+pelagian:
+  id: 5
+  name: "Pelagian"
+  capacity: 1

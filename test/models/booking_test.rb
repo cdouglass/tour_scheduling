@@ -22,4 +22,9 @@ class BookingTest < ActiveSupport::TestCase
       assert @booking.invalid?
     end
   end
+
+  def test_timeslot_has_room
+    @booking.timeslot = timeslots(:just_before_two)
+    assert @booking.invalid?
+  end
 end
