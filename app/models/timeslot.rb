@@ -2,6 +2,7 @@ class Timeslot < ApplicationRecord
 
   has_many :assignments
   has_many :boats, through: :assignments
+  has_many :bookings
 
   attr_accessor :duration
 

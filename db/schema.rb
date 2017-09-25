@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170924225820) do
+ActiveRecord::Schema.define(version: 20170925012412) do
 
   create_table "assignments", force: :cascade do |t|
     t.integer "timeslot_id", null: false
@@ -24,6 +24,14 @@ ActiveRecord::Schema.define(version: 20170924225820) do
     t.integer "capacity", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "bookings", force: :cascade do |t|
+    t.integer "size"
+    t.integer "timeslot_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["timeslot_id"], name: "index_bookings_on_timeslot_id"
   end
 
   create_table "timeslots", force: :cascade do |t|
