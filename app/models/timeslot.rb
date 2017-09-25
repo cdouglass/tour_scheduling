@@ -15,7 +15,17 @@ class Timeslot < ApplicationRecord
   end
 
   def availability
-    self.boats.reduce(0) {|sum, boat| sum + boat.capacity} - customer_count
+    # would be more efficient to use a heap
+    # but this is a temporary solution anyway
+    # just gives lower bound, not actual availability given optimal assignments
+    # of bookings to boats
+    capacities = self.boats.map { |boat| boat.capacity }.sort
+    self.bookings.each do |book|
+      i = capacities.find_index { |capacity| capacity >= book.size }
+      capacities[i] -= book.size
+      capacities.sort
+    end
+    capacities[-1] || 0
   end
 
   def customer_count

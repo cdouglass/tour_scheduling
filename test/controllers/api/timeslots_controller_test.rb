@@ -26,7 +26,7 @@ class Api::TimeslotsControllerTest < ActionDispatch::IntegrationTest
 
   def test_includes_timeslots_overlapping_date
     days = [
-      ["2017-09-27", "[{\"id\":980190962,\"start_time\":1506520000,\"duration\":5,\"availability\":999999,\"customer_count\":11,\"boats\":[{\"id\":476007621,\"name\":\"Funny, It Worked Last Time...\",\"capacity\":1000000},{\"id\":1064137960,\"name\":\"Just Testing\",\"capacity\":10}]},{\"id\":610585660,\"start_time\":1505520000,\"duration\":16671,\"availability\":0,\"customer_count\":0,\"boats\":[]},{\"id\":643171019,\"start_time\":1505520000,\"duration\":33338,\"availability\":0,\"customer_count\":0,\"boats\":[]}]"],
+      ["2017-09-27", "[{\"id\":980190962,\"start_time\":1506520000,\"duration\":5,\"availability\":999989,\"customer_count\":11,\"boats\":[{\"id\":476007621,\"name\":\"Funny, It Worked Last Time...\",\"capacity\":1000000},{\"id\":1064137960,\"name\":\"Just Testing\",\"capacity\":10}]},{\"id\":610585660,\"start_time\":1505520000,\"duration\":16671,\"availability\":0,\"customer_count\":0,\"boats\":[]},{\"id\":643171019,\"start_time\":1505520000,\"duration\":33338,\"availability\":0,\"customer_count\":0,\"boats\":[]}]"],
     ]
 
     days.each do |date, expected_response|
