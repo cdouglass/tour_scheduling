@@ -2,7 +2,7 @@ require 'test_helper'
 
 class AssignmentTest < ActiveSupport::TestCase
   def setup
-    @assignment = Assignment.new(boat_id: 1, timeslot_id: 1)
+    @assignment = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(:one))
   end
 
   def test_valid
@@ -25,23 +25,23 @@ class AssignmentTest < ActiveSupport::TestCase
 
   def test_no_overlaps
     @assignment.save!
-    [6, 7].each do |id|
-      a = Assignment.new(boat_id: 1, timeslot_id: id)
+    [:extends_into_day_1, :before_and_after_day_one].each do |name|
+      a = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(name))
       assert a.invalid?
     end
 
-    @assignment.timeslot_id = 3
+    @assignment.timeslot = timeslots(:midnight_of_two)
     @assignment.save!
-    [3].each do |id|
-      a = Assignment.new(boat_id: 1, timeslot_id: id)
+    [:midnight_of_two].each do |name|
+      a = Assignment.new(boat: boats(:nonsense), timeslot_id: name)
       assert a.invalid?
     end
   end
 
   def test_adjoining_timeslots
-    @assignment.timeslot_id = 5
+    @assignment.timeslot = timeslots(:just_before_two)
     @assignment.save!
-    a = Assignment.new(boat_id: 1, timeslot_id: 3)
+    a = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(:midnight_of_two))
     assert a.valid?
   end
 end

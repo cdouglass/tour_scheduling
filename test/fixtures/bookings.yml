@@ -2,4 +2,4 @@
 
 one:
   size: 11
-  timeslot_id: 1
+  timeslot: one

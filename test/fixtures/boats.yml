@@ -1,26 +1,21 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
-one:
-  id: 1
+nonsense:
   name: "Another Fine Product From The Nonsense Factory"
   capacity: 15
 
-two:
-  id: 2
+rtfm:
   name: "Just Read The Instructions"
   capacity: 40
 
-three:
-  id: 3
+just_testing:
   name: "Just Testing"
   capacity: 10
 
-four:
-  id: 4
+funny:
   name: "Funny, It Worked Last Time..."
   capacity: 1_000_000
 
 pelagian:
-  id: 5
   name: "Pelagian"
-  capacity: 1
+  capacity: 2

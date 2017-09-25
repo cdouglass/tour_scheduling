@@ -5,12 +5,12 @@
 # below each fixture, per the syntax in the comments below
 #
 one:
-  boat_id: 3
-  timeslot_id: 1
+  boat: just_testing
+  timeslot: one
 
 two:
-  boat_id: 4
-  timeslot_id: 1
+  boat: funny
+  timeslot: one
 
 three:
   boat: pelagian

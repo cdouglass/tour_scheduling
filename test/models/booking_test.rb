@@ -2,7 +2,7 @@ require 'test_helper'
 
 class BookingTest < ActiveSupport::TestCase
   def setup
-    @booking = Booking.new(size: 5, timeslot_id: 1)
+    @booking = Booking.new(size: 5, timeslot: timeslots(:one))
   end
 
   def test_valid
