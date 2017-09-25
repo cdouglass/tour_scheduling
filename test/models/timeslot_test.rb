@@ -27,4 +27,12 @@ class TimeslotTest < ActiveSupport::TestCase
   def test_duration
     assert_equal(20, @timeslot.duration)
   end
+
+  def test_availability
+    assert_equal(999_999, timeslots(:one).availability)
+  end
+
+  def test_customer_count
+    assert_equal(11, timeslots(:one).customer_count)
+  end
 end

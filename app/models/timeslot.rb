@@ -15,11 +15,11 @@ class Timeslot < ApplicationRecord
   end
 
   def availability
-    self.boats.reduce(0) {|sum, boat| sum + boat.capacity}
+    self.boats.reduce(0) {|sum, boat| sum + boat.capacity} - customer_count
   end
 
   def customer_count
-    0
+    self.bookings.reduce(0) {|sum, booking| sum + booking.size}
   end
 
   def initialize(attributes={})
