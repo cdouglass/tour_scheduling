@@ -18,5 +18,23 @@ class SearchTest < ActiveSupport::TestCase
     solutions = depth_first_search(obj)
     assert_equal(expected_solutions, solutions)
   end
+
+  def test_distributing_bookings
+    boat_sizes = [1, 3, 5]
+    booking_sizes = [3, 2, 1]
+    expected_solutions = [
+      [{:boat=>0, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
+      [{:boat=>0, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>1, :booking=>3}],
+      [{:boat=>0, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>2, :booking=>3}],
+      [{:boat=>1, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
+      [{:boat=>1, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>2, :booking=>3}],
+      [{:boat=>2, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
+      [{:boat=>2, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>1, :booking=>3}]
+    ]
+
+    obj = SearchAvailability.new(boat_sizes, booking_sizes)
+    solutions = depth_first_search(obj)
+    assert_equal(expected_solutions, solutions)
+  end
 end
 

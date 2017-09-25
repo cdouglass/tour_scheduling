@@ -1,3 +1,41 @@
+# mimic SearchObject to get a feel for what they share and whether it makes sense for both to be subclasses of a thing, or what
+class SearchAvailability
+  def initialize(boat_sizes, booking_sizes)
+    @boats = boat_sizes.sort
+    @bookings = booking_sizes
+    @boat_index = nil
+  end
+
+  def accept?
+    @bookings.empty?
+  end
+
+  # inefficient - combine with make_next_move?
+  def can_move?
+    return false if @bookings.empty?
+    size = @bookings[-1]
+    i = (@boat_index || -1) + 1
+    @boats.slice(i..-1).any? {|capacity| capacity >= size }
+  end
+
+  def make_next_move
+    size = @bookings.pop
+    last = (@boat_index || -1) + 1
+    i = @boats.slice(last..-1).find_index { |capacity| capacity >= size } + last
+    @boats[i] -= size
+    @boat_index = 0
+    { boat: i, booking: size }
+  end
+
+  def backtrack(stack)
+    i = stack[-1][:boat]
+    size = stack[-1][:booking]
+    @bookings.push(size)
+    @boats[i] += size
+    @boat_index = i
+  end
+end
+
 # Test example
 # Given an array of integers and a target, find subsequences which sum to the target
 class SearchObject
