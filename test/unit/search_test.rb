@@ -14,26 +14,26 @@ class SearchTest < ActiveSupport::TestCase
       [2, 4, 6],
       [5, 6]
     ]
-    obj = SearchObject.new(target, array)
-    solutions = depth_first_search(obj)
-    assert_equal(expected_solutions, solutions)
+    obj = SearchObjectExample.new(target, array)
+    solutions = obj.depth_first_search
+    assert_equal(expected_solutions, solutions.map {|x| x.map {|y| y[:index]}})
   end
 
   def test_distributing_bookings
     boat_sizes = [1, 3, 5]
     booking_sizes = [3, 2, 1]
     expected_solutions = [
-      [{:boat=>0, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
-      [{:boat=>0, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>1, :booking=>3}],
-      [{:boat=>0, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>2, :booking=>3}],
-      [{:boat=>1, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
-      [{:boat=>1, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>2, :booking=>3}],
-      [{:boat=>2, :booking=>1}, {:boat=>1, :booking=>2}, {:boat=>2, :booking=>3}],
-      [{:boat=>2, :booking=>1}, {:boat=>2, :booking=>2}, {:boat=>1, :booking=>3}]
+      [{:index=>0, :booking=>1}, {:index=>1, :booking=>2}, {:index=>2, :booking=>3}],
+      [{:index=>0, :booking=>1}, {:index=>2, :booking=>2}, {:index=>1, :booking=>3}],
+      [{:index=>0, :booking=>1}, {:index=>2, :booking=>2}, {:index=>2, :booking=>3}],
+      [{:index=>1, :booking=>1}, {:index=>1, :booking=>2}, {:index=>2, :booking=>3}],
+      [{:index=>1, :booking=>1}, {:index=>2, :booking=>2}, {:index=>2, :booking=>3}],
+      [{:index=>2, :booking=>1}, {:index=>1, :booking=>2}, {:index=>2, :booking=>3}],
+      [{:index=>2, :booking=>1}, {:index=>2, :booking=>2}, {:index=>1, :booking=>3}]
     ]
 
     obj = SearchAvailability.new(boat_sizes, booking_sizes)
-    solutions = depth_first_search(obj)
+    solutions = obj.depth_first_search
     assert_equal(expected_solutions, solutions)
   end
 end

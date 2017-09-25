@@ -1,7 +1,54 @@
+class Search
+  def initialize(all_moves)
+    @all_moves = all_moves
+  end
+
+  def accept?
+    false
+  end
+
+  def backtrack
+  end
+
+  def can_move
+    false
+  end
+
+  def make_next_move
+  end
+
+  # Returns array of all solutions
+  def depth_first_search
+    stack = []
+    solutions = []
+
+    loop do
+      if accept?
+        solutions.push(Array.new(stack)) # copy
+        backtrack(stack)
+        stack.pop
+      elsif can_move?
+        move = make_next_move
+        stack.push(move)
+      elsif stack.empty?
+        break
+      else
+        backtrack(stack)
+        stack.pop
+      end
+    end
+
+    solutions
+  end
+end
+
+
 # mimic SearchObject to get a feel for what they share and whether it makes sense for both to be subclasses of a thing, or what
-class SearchAvailability
+# Assume WLOG we have a unique way of indexing into set of all possible moves
+class SearchAvailability < Search
   def initialize(boat_sizes, booking_sizes)
-    @boats = boat_sizes.sort
+    super(boat_sizes)
+    @all_moves.sort
     @bookings = booking_sizes
     @boat_index = nil
   end
@@ -15,33 +62,33 @@ class SearchAvailability
     return false if @bookings.empty?
     size = @bookings[-1]
     i = (@boat_index || -1) + 1
-    @boats.slice(i..-1).any? {|capacity| capacity >= size }
+    @all_moves.slice(i..-1).any? {|capacity| capacity >= size }
   end
 
   def make_next_move
     size = @bookings.pop
     last = (@boat_index || -1) + 1
-    i = @boats.slice(last..-1).find_index { |capacity| capacity >= size } + last
-    @boats[i] -= size
+    i = @all_moves.slice(last..-1).find_index { |capacity| capacity >= size } + last
+    @all_moves[i] -= size
     @boat_index = 0
-    { boat: i, booking: size }
+    { index: i, booking: size }
   end
 
   def backtrack(stack)
-    i = stack[-1][:boat]
+    i = stack[-1][:index]
     size = stack[-1][:booking]
     @bookings.push(size)
-    @boats[i] += size
+    @all_moves[i] += size
     @boat_index = i
   end
 end
 
 # Test example
 # Given an array of integers and a target, find subsequences which sum to the target
-class SearchObject
+class SearchObjectExample < Search
   def initialize(target, array)
+    super(array)
     @target = target
-    @array = array
     @current_sum = 0
     @current_index = nil
     @last_tried = nil
@@ -52,12 +99,12 @@ class SearchObject
   end
 
   def can_move?
-    if @array.empty?
+    if @all_moves.empty?
       false
     elsif @last_tried.nil?
-        @current_index.nil? || (@current_index < @array.length - 1)
+        @current_index.nil? || (@current_index < @all_moves.length - 1)
     else
-      (@last_tried < @array.length - 1)
+      (@last_tried < @all_moves.length - 1)
     end
   end
 
@@ -68,37 +115,14 @@ class SearchObject
       @current_index = @last_tried + 1
     end
     @last_tried = @current_index
-    @current_sum += @array[@current_index]
-    @current_index
+    @current_sum += @all_moves[@current_index]
+    { index: @current_index }
   end
 
   def backtrack(stack)
-    @current_sum -= @array[stack[-1]]
-    @last_tried = stack[-1] # we know this isn't nil
+    i = stack[-1][:index]
+    @current_sum -= @all_moves[i]
+    @last_tried = i
     @current_index = stack[-2]
   end
-end
-
-# Returns array of all solutions
-def depth_first_search(search_object)
-  stack = []
-  solutions = []
-
-  loop do
-    if search_object.accept?
-      solutions.push(Array.new(stack)) # copy
-      search_object.backtrack(stack)
-      stack.pop
-    elsif search_object.can_move?
-      move = search_object.make_next_move
-      stack.push(move)
-    elsif stack.empty?
-      break
-    else
-      search_object.backtrack(stack)
-      stack.pop
-    end
-  end
-
-  solutions
 end
