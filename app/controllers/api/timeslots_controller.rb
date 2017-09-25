@@ -10,7 +10,7 @@ class Api::TimeslotsController < ApplicationController
 
     @timeslots = Timeslot.all_on_date(@date)
 
-    render json: @timeslots, only: timeslot_fields
+    render json: @timeslots, except: hidden_fields
   end
 
   def create
@@ -18,13 +18,13 @@ class Api::TimeslotsController < ApplicationController
 
     @timeslot.save
 
-    render json: @timeslot, only: timeslot_fields
+    render json: @timeslot, except: hidden_fields
   end
 
   private
 
-  def timeslot_fields
-    [:id, :start_time, :duration]
+  def hidden_fields
+    [:created_at, :updated_at, :end_time]
   end
 
   def search_params

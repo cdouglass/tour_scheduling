@@ -13,14 +13,25 @@ class Timeslot < ApplicationRecord
     @duration ||= (self.end_time - self.start_time) / 60
   end
 
+  def availability
+    self.boats.reduce(0) {|sum, boat| sum + boat.capacity}
+  end
+
+  def customer_count
+    0
+  end
+
   def initialize(attributes={})
     self.duration = attributes[:duration]
     super
   end
 
   def as_json(options = {})
-    json = super(options)
+    json = super(except: [:created_at, :updated_at, :end_time])
     json[:duration] = self.duration.to_i
+    json[:availability] = self.availability
+    json[:customer_count] = self.customer_count
+    json[:boats] = self.boats
     json
   end
 
