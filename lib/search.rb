@@ -14,17 +14,24 @@ class Search
     false
   end
 
+  def quality(solution)
+    0
+  end
+
   def make_next_move
   end
 
   # Returns array of all solutions
   def depth_first_search
     stack = []
-    solutions = []
+    best = nil
 
     loop do
       if accept?
-        solutions.push(Array.new(stack)) # copy
+        q = quality(stack)
+        if best.nil? || (q > best[:quality])
+          best = {quality: quality(stack), solution: Array.new(stack)}
+        end
         backtrack(stack)
         stack.pop
       elsif can_move?
@@ -38,7 +45,7 @@ class Search
       end
     end
 
-    solutions
+    best
   end
 end
 
@@ -55,6 +62,10 @@ class SearchAvailability < Search
 
   def accept?
     @bookings.empty?
+  end
+
+  def quality(_)
+    @all_moves.max
   end
 
   # inefficient - combine with make_next_move?
