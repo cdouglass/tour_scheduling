@@ -81,11 +81,12 @@ class SearchAvailability < DepthFirstSearch
   end
 
   def upper_bound(stack)
-    @all_moves.max
+    quality(stack)
   end
 
+  # could be more efficient with a heap
   def quality(_)
-    @all_moves.max
+    @all_moves.max || 0
   end
 
   def make_next_move

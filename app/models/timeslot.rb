@@ -1,5 +1,7 @@
 class Timeslot < ApplicationRecord
 
+  require 'search'
+
   has_many :assignments
   has_many :boats, through: :assignments
   has_many :bookings
@@ -15,17 +17,10 @@ class Timeslot < ApplicationRecord
   end
 
   def availability
-    # would be more efficient to use a heap
-    # but this is a temporary solution anyway
-    # just gives lower bound, not actual availability given optimal assignments
-    # of bookings to boats
-    capacities = self.boats.map { |boat| boat.capacity }.sort
-    self.bookings.each do |book|
-      i = capacities.find_index { |capacity| capacity >= book.size }
-      capacities[i] -= book.size
-      capacities.sort
-    end
-    capacities[-1] || 0
+    capacities = self.boats.map { |boat| boat.capacity }
+    booking_sizes = self.bookings.map { |booking| booking.size }
+    best_distribution = SearchAvailability.new(capacities, booking_sizes).depth_first_search
+    best_distribution.nil? ? 0 : best_distribution[:quality]
   end
 
   def customer_count
