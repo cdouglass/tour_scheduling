@@ -12,8 +12,17 @@ class Search
     false
   end
 
+  def upper_bound(stack)
+    0
+  end
+
   def quality(solution)
     0
+  end
+
+  def skip_move
+    make_next_move # side effects, but ignore return value
+    nil
   end
 
   def make_next_move
@@ -40,14 +49,19 @@ class Search
           best_so_far = {quality: q, solution: Array.new(stack)}
         end
       else
-        move = make_next_move
-        if !move.nil?
-          stack.push(move)
-          next
-        elsif stack.empty?
-          break
+        bound = upper_bound(stack)
+        if best_so_far.nil? || (bound > best_so_far[:quality])
+          move = make_next_move
+          if !move.nil?
+            stack.push(move)
+            next
+          end
+        else
+          skip_move
         end
       end
+
+      break if stack.empty?
       backtrack(stack)
     end
 
@@ -64,6 +78,10 @@ class SearchAvailability < Search
 
   def accept?
     @bookings.empty?
+  end
+
+  def upper_bound(stack)
+    @all_moves.max
   end
 
   def quality(_)
@@ -103,6 +121,12 @@ class SearchObjectExample < Search
 
   def accept?
     @target == @sum
+  end
+
+  def skip_move
+    old_sum = @sum
+    super
+    @sum = old_sum
   end
 
   def make_next_move
