@@ -10,7 +10,7 @@ This is a Rails app with nothing extra. [Railsbridge](http://docs.railsbridge.or
 
 The spec does not require a booking to be tied to an individual boat, but a booking may not be split between multiple boats. When a new booking is added to a timeslot, reshuffling pre-existing bookings to other boats can allow for a larger maximum availability. Therefore a timeslot's availability must be recalculated from scratch after any event that could change it.
 
-Finding the configuration which permits the largest possible new booking is a combinatorial problem I expect is NP-complete. Therefore it probably cannot be done with complexity better than exponential in the number of bookings in the timeslot. With a large enough operation, this could be a problem and we could do some combination of the following:
+Finding the configuration which permits the largest possible new booking is a combinatorial problem that I suspect is NP-complete. So it probably cannot be done with complexity better than exponential in the number of bookings in the timeslot. With a large enough operation, this could be a problem and we could do some combination of the following:
 
 * Adding an `availability` column to the `timeslots` table and recalculating availability only when a new booking or boat is assigned to the timeslot. This way, while `create` actions might still be slow, `index` need not be.
 
@@ -25,3 +25,7 @@ While the spec requires conflicting assignments to be allowed, it does not menti
 Allowing boats to be shuffled between timeslots similarly to how bookings are already shuffled between boats could improve availability a bit further. However this could be confusing and I don't think the benefit is compelling, so I'm not going to implement it.
 
 Before saving an assignment, or using it to determine a timeslot's availability, I validate that its boat is not committed elsewhere, ie that none of its conflicting assignments has any bookings.
+
+## Caveats
+
+For simplicity of setup, I used the default database, SQLite3. Rails' adapter for it does not handle concurrency well, and the test cases the client provides often result in 500 errors: `ActiveRecord::StatementInvalid (SQLite3::BusyException: database is locked: commit transaction):` Usually a request will be successful if repeated a few seconds later. In production, I would use PG instead.
