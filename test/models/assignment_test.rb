@@ -25,22 +25,25 @@ class AssignmentTest < ActiveSupport::TestCase
 
   def test_no_overlaps
     @assignment.save!
-    [:extends_into_day_1, :before_and_after_day_one].each do |name|
+    # existing assignment already confirmed by booking fixture :one
+    overlapping = [:extends_into_day_1, :before_and_after_day_one]
+    overlapping.each do |name|
       a = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(name))
       assert a.invalid?
     end
 
-    @assignment.timeslot = timeslots(:midnight_of_two)
-    @assignment.save!
-    [:midnight_of_two].each do |name|
-      a = Assignment.new(boat: boats(:nonsense), timeslot_id: name)
-      assert a.invalid?
+    Booking.last.delete
+
+    overlapping.each do |name|
+      a = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(name))
+      assert a.valid?
     end
   end
 
   def test_adjoining_timeslots
     @assignment.timeslot = timeslots(:just_before_two)
     @assignment.save!
+    Booking.create!(size: 1, timeslot: timeslots(:just_before_two))
     a = Assignment.new(boat: boats(:nonsense), timeslot: timeslots(:midnight_of_two))
     assert a.valid?
   end

@@ -23,3 +23,5 @@ Here, I use a branch-and-bound approach: modified depth-first search over bookin
 While the spec requires conflicting assignments to be allowed, it does not mention the creation of new conflicting assignments when there is already a booking.
 
 Allowing boats to be shuffled between timeslots similarly to how bookings are already shuffled between boats could improve availability a bit further. However this could be confusing and I don't think the benefit is compelling, so I'm not going to implement it.
+
+Before saving an assignment, or using it to determine a timeslot's availability, I validate that its boat is not committed elsewhere, ie that none of its conflicting assignments has any bookings.

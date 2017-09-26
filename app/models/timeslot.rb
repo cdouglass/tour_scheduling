@@ -17,7 +17,8 @@ class Timeslot < ApplicationRecord
   end
 
   def availability
-    capacities = self.boats.map { |boat| boat.capacity }
+    self.reload
+    capacities = valid_boats.map { |boat| boat.capacity }
     booking_sizes = self.bookings.map { |booking| booking.size }
     best_distribution = SearchAvailability.new(capacities, booking_sizes).depth_first_search
     best_distribution.nil? ? 0 : best_distribution[:quality]
@@ -58,5 +59,10 @@ class Timeslot < ApplicationRecord
     if (self.end_time.nil? || self.end_time < 0) && self.errors.empty?
       self.end_time = self.start_time + 60 * @duration.to_i
     end
+  end
+
+  def valid_boats
+    valid_assignments = self.assignments.select { |a| a.valid? }
+    valid_assignments.map { |a| a.boat }
   end
 end

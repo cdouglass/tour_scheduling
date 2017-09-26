@@ -12,6 +12,7 @@ class Assignment < ApplicationRecord
   def no_overlap
     if self.errors.empty?
       overlapping = Timeslot.all_overlapping_range(self.timeslot.start_time, self.timeslot.end_time)
+        .joins(:bookings)
         .joins(:assignments)
         .where(assignments: {boat_id: self.boat_id})
         .where.not(assignments: {id: self.id})
