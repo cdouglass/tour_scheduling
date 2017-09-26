@@ -1,4 +1,4 @@
-class Search
+class DepthFirstSearch
   def initialize(all_moves)
     @all_moves = all_moves
     @last_index_tried = nil
@@ -69,7 +69,7 @@ class Search
   end
 end
 
-class SearchAvailability < Search
+class SearchAvailability < DepthFirstSearch
   def initialize(boat_sizes, booking_sizes)
     super(boat_sizes)
     @all_moves.sort
@@ -107,37 +107,6 @@ class SearchAvailability < Search
     size = item[:booking]
     @bookings.push(size)
     @all_moves[@last_index_tried] += size
-    item
-  end
-end
-
-# Given an array of integers and a target, find subsequences which sum to the target
-class SearchObjectExample < Search
-  def initialize(target, array)
-    super(array)
-    @target = target
-    @sum = 0
-  end
-
-  def accept?
-    @target == @sum
-  end
-
-  def skip_move
-    old_sum = @sum
-    super
-    @sum = old_sum
-  end
-
-  def make_next_move
-    move = super
-    @sum += @all_moves[@last_index_tried] if !move.nil?
-    move
-  end
-
-  def backtrack(stack)
-    item = super(stack)
-    @sum -= @all_moves[@last_index_tried]
     item
   end
 end
