@@ -1,16 +1,14 @@
 class Search
   def initialize(all_moves)
     @all_moves = all_moves
+    @last_index_tried = nil
+  end
+
+  def one_after_last
+    @last_index_tried.nil? ? 0 : @last_index_tried + 1
   end
 
   def accept?
-    false
-  end
-
-  def backtrack
-  end
-
-  def can_move
     false
   end
 
@@ -19,45 +17,49 @@ class Search
   end
 
   def make_next_move
+    if one_after_last < @all_moves.length
+      @last_index_tried = one_after_last
+      { index: @last_index_tried }
+    end
   end
 
-  # Returns array of all solutions
+  def backtrack(stack)
+    item = stack.pop
+    @last_index_tried = item[:index]
+    item
+  end
+
   def depth_first_search
     stack = []
-    best = nil
+    best_so_far = nil
 
     loop do
       if accept?
         q = quality(stack)
-        if best.nil? || (q > best[:quality])
-          best = {quality: quality(stack), solution: Array.new(stack)}
+        if best_so_far.nil? || (q > best_so_far[:quality])
+          best_so_far = {quality: q, solution: Array.new(stack)}
         end
-        backtrack(stack)
-        stack.pop
-      elsif can_move?
-        move = make_next_move
-        stack.push(move)
-      elsif stack.empty?
-        break
       else
-        backtrack(stack)
-        stack.pop
+        move = make_next_move
+        if !move.nil?
+          stack.push(move)
+          next
+        elsif stack.empty?
+          break
+        end
       end
+      backtrack(stack)
     end
 
-    best
+    best_so_far
   end
 end
 
-
-# mimic SearchObject to get a feel for what they share and whether it makes sense for both to be subclasses of a thing, or what
-# Assume WLOG we have a unique way of indexing into set of all possible moves
 class SearchAvailability < Search
   def initialize(boat_sizes, booking_sizes)
     super(boat_sizes)
     @all_moves.sort
     @bookings = booking_sizes
-    @boat_index = nil
   end
 
   def accept?
@@ -68,72 +70,50 @@ class SearchAvailability < Search
     @all_moves.max
   end
 
-  # inefficient - combine with make_next_move?
-  def can_move?
-    return false if @bookings.empty?
-    size = @bookings[-1]
-    i = (@boat_index || -1) + 1
-    @all_moves.slice(i..-1).any? {|capacity| capacity >= size }
-  end
-
   def make_next_move
-    size = @bookings.pop
-    last = (@boat_index || -1) + 1
-    i = @all_moves.slice(last..-1).find_index { |capacity| capacity >= size } + last
-    @all_moves[i] -= size
-    @boat_index = 0
-    { index: i, booking: size }
+    move = super
+    size = @bookings[-1]
+    i = @all_moves.slice(@last_index_tried..-1).find_index { |capacity| capacity >= size }
+    return nil if move.nil? || i.nil?
+    @bookings.pop
+    @all_moves[@last_index_tried + i] -= size
+    @last_index_tried = 0
+    move[:index] += i
+    move[:booking] = size
+    move
   end
 
+  # return item, for consistency
   def backtrack(stack)
-    i = stack[-1][:index]
-    size = stack[-1][:booking]
+    item = super(stack)
+    size = item[:booking]
     @bookings.push(size)
-    @all_moves[i] += size
-    @boat_index = i
+    @all_moves[@last_index_tried] += size
+    item
   end
 end
 
-# Test example
 # Given an array of integers and a target, find subsequences which sum to the target
 class SearchObjectExample < Search
   def initialize(target, array)
     super(array)
     @target = target
-    @current_sum = 0
-    @current_index = nil
-    @last_tried = nil
+    @sum = 0
   end
 
   def accept?
-    @target == @current_sum
-  end
-
-  def can_move?
-    if @all_moves.empty?
-      false
-    elsif @last_tried.nil?
-        @current_index.nil? || (@current_index < @all_moves.length - 1)
-    else
-      (@last_tried < @all_moves.length - 1)
-    end
+    @target == @sum
   end
 
   def make_next_move
-    if @last_tried.nil?
-      @current_index = (@current_index || -1) + 1
-    else
-      @current_index = @last_tried + 1
-    end
-    @last_tried = @current_index
-    @current_sum += @all_moves[@current_index]
-    { index: @current_index }
+    move = super
+    @sum += @all_moves[@last_index_tried] if !move.nil?
+    move
   end
 
   def backtrack(stack)
-    i = stack[-1][:index]
-    @current_sum -= @all_moves[i]
-    @last_tried = i
-    @current_index = stack[-2]
+    item = super(stack)
+    @sum -= @all_moves[@last_index_tried]
+    item
   end
 end
